@@ -12,4 +12,6 @@ gcloud init
 https://developer.hashicorp.com/terraform/tutorials/gcp-get-started/install-cli
 terraform init
 
-5. 
+5. Replace project ID in vars.tf
+
+6. Run terraform with 
