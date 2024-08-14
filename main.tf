@@ -12,13 +12,10 @@ provider "google" {
 }
 
 #API Services
-module "project-services" {
-  source  = "terraform-google-modules/project-factory/google//modules/project_services"
-  version = "~> 15.0"
-
+module "apis" {
+  source     = "./apis"
   project_id = var.project_id
-
-  activate_apis = [
+  services_list = [
     "alloydb.googleapis.com",
     "compute.googleapis.com",
     "cloudresourcemanager.googleapis.com",
@@ -29,80 +26,37 @@ module "project-services" {
   ]
 }
 
+#User IAM
+module "user_iam" {
+  source     = "./user_iam"
+  project_id = module.apis.project_id
+  iam_list = [
+    {
+      role   = "roles/viewer"
+      member = var.viewer_emails
+    },
+    {
+      role   = "roles/editor"
+      member = var.editor_emails
+    }
+  ]
+}
+
 #AlloyDB
-resource "google_alloydb_instance" "alloydb-instance" {
-  cluster       = google_alloydb_cluster.alloydb-cluster.id
-  instance_id   = "alloydb-instance"
-  instance_type = "PRIMARY"
-
-  machine_config {
-    cpu_count = 2
-  }
-
-  depends_on = [google_service_networking_connection.vpc_connection]
+module "alloydb" {
+  source     = "./alloydb"
+  project_id = module.apis.project_id
 }
 
-resource "google_alloydb_cluster" "alloydb-cluster" {
-  cluster_id = "alloydb-cluster"
-  location   = "asia-southeast1"
-
-  network_config {
-    network = "default" # Use the default VPC
-  }
-
-  initial_user {
-    password = "alloydb-cluster"
-  }
-}
-
-data "google_project" "project" {}
-
-resource "google_compute_global_address" "private_ip_alloc" {
-  name          = "alloydb-cluster"
-  address_type  = "INTERNAL"
-  purpose       = "VPC_PEERING"
-  prefix_length = 16
-  network       = "default" # Use the default VPC
-}
-
-resource "google_service_networking_connection" "vpc_connection" {
-  network                 = "default" # Use the default VPC
-  service                 = "servicenetworking.googleapis.com"
-  reserved_peering_ranges = [google_compute_global_address.private_ip_alloc.name]
-}
-
-#Workbench
-resource "google_workbench_instance" "workbench-instance" {
-  name     = "workbench-instance"
-  location = "asia-southeast1-a"
-  gce_setup {
-    machine_type = "e2-standard-2"
-  }
+#Vertex AI Workbench
+module "vertex_ai" {
+  source     = "./vertex_ai"
+  project_id = module.apis.project_id
 }
 
 #BigQuery
-resource "google_bigquery_dataset" "bq-dataset" {
-  dataset_id = "bq_dataset"
-  project    = var.project_id
-  location   = "asia-southeast1"
-}
-
-resource "google_bigquery_table" "bq-table" {
-  table_id   = "bq-table"
-  dataset_id = "bq_dataset"
-  project    = var.project_id
-
-  schema = jsonencode([
-    {
-      "name" = "name"
-      "type" = "STRING"
-      "mode" = "NULLABLE"
-    },
-    {
-      "name" = "age"
-      "type" = "INTEGER"
-      "mode" = "NULLABLE"
-    }
-  ])
+module "big_query" {
+  source     = "./big_query"
+  project_id = module.apis.project_id
 }
 
