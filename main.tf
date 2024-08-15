@@ -63,7 +63,7 @@ module "alloydb" {
 module "vertex_ai" {
   source           = "./vertex_ai"
   project_id       = module.apis.project_id
-  vpc_network_name = module.vpc.vpc_name
+  vpc_network_name = module.vpc.vpc_self_link
   depends_on       = [module.apis]
 }
 

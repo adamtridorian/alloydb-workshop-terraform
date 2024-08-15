@@ -11,12 +11,16 @@ resource "google_alloydb_instance" "alloydb-instance" {
     enable_public_ip = true
   }
 
+  database_flags = {
+    "password.enforce_complexity" = "on"
+  }
+
   depends_on = [google_service_networking_connection.vpc_connection]
 }
 
 resource "google_alloydb_cluster" "alloydb-cluster" {
   cluster_id = "alloydb-cluster"
-  location   = "asia-southeast"
+  location   = "asia-southeast1"
   project    = var.project_id
 
   network_config {
@@ -24,7 +28,7 @@ resource "google_alloydb_cluster" "alloydb-cluster" {
   }
 
   initial_user {
-    password = "alloydb-cluster"
+    password = "@wUswO9r?_haT_?Hospl"
   }
 }
 
