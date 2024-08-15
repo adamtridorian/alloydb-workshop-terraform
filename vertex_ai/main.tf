@@ -4,6 +4,10 @@ resource "google_workbench_instance" "workbench-instance" {
   project  = var.project_id
   gce_setup {
     machine_type = "e2-standard-2"
+
+    network_interfaces {
+      network = var.vpc_network_name
+    }
   }
 
   timeouts {

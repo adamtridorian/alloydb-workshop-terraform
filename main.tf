@@ -11,6 +11,13 @@ provider "google" {
   project = var.project_id
 }
 
+#VPC
+module "vpc" {
+  source       = "./vpc"
+  project_id   = var.project_id
+  network_name = "data-lab-vpc"
+}
+
 #API Services
 module "apis" {
   source     = "./apis"
@@ -24,6 +31,7 @@ module "apis" {
     "notebooks.googleapis.com",
     "bigquery.googleapis.com",
   ]
+  depends_on = [module.vpc]
 }
 
 #User IAM
@@ -45,16 +53,18 @@ module "user_iam" {
 
 #AlloyDB
 module "alloydb" {
-  source     = "./alloydb"
-  project_id = module.apis.project_id
-  depends_on = [module.apis]
+  source           = "./alloydb"
+  project_id       = module.apis.project_id
+  vpc_network_name = module.vpc.vpc_name
+  depends_on       = [module.apis]
 }
 
 #Vertex AI Workbench
 module "vertex_ai" {
-  source     = "./vertex_ai"
-  project_id = module.apis.project_id
-  depends_on = [module.apis]
+  source           = "./vertex_ai"
+  project_id       = module.apis.project_id
+  vpc_network_name = module.vpc.vpc_name
+  depends_on       = [module.apis]
 }
 
 #BigQuery

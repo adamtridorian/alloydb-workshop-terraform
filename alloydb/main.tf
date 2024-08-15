@@ -1,6 +1,6 @@
 resource "google_alloydb_instance" "alloydb-instance" {
   cluster       = google_alloydb_cluster.alloydb-cluster.id
-  instance_id   = "alloydb-instance1"
+  instance_id   = "alloydb-instance"
   instance_type = "PRIMARY"
 
   machine_config {
@@ -15,12 +15,12 @@ resource "google_alloydb_instance" "alloydb-instance" {
 }
 
 resource "google_alloydb_cluster" "alloydb-cluster" {
-  cluster_id = "alloydb-cluster1"
-  location   = "asia-southeast1"
+  cluster_id = "alloydb-cluster"
+  location   = "asia-southeast"
   project    = var.project_id
 
   network_config {
-    network = "default"
+    network = var.vpc_network_name
   }
 
   initial_user {
@@ -29,15 +29,15 @@ resource "google_alloydb_cluster" "alloydb-cluster" {
 }
 
 resource "google_compute_global_address" "private_ip_alloc" {
-  name          = "alloydb-cluster1"
+  name          = "alloydb-cluster"
   address_type  = "INTERNAL"
   purpose       = "VPC_PEERING"
   prefix_length = 16
-  network       = "default"
+  network       = "data-lab-vpc"
 }
 
 resource "google_service_networking_connection" "vpc_connection" {
-  network                 = "default"
+  network                 = var.vpc_network_name
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.private_ip_alloc.name]
 }
