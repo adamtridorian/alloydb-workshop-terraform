@@ -7,9 +7,11 @@ variable "project_id" {
 variable "editor_emails" {
   description = "Emails of editor users"
   type        = list(string)
+  default     = []
 }
 
 variable "viewer_emails" {
   description = "Emails of viewer users"
   type        = list(string)
+  default     = []
 }
