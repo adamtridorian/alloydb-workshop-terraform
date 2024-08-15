@@ -22,7 +22,7 @@ module "apis" {
     "servicenetworking.googleapis.com",
     "iam.googleapis.com",
     "notebooks.googleapis.com",
-    "bigquery.googleapis.com"
+    "bigquery.googleapis.com",
   ]
 }
 
@@ -40,23 +40,27 @@ module "user_iam" {
       member = var.editor_emails
     }
   ]
+  depends_on = [module.apis]
 }
 
 #AlloyDB
 module "alloydb" {
   source     = "./alloydb"
   project_id = module.apis.project_id
+  depends_on = [module.apis]
 }
 
 #Vertex AI Workbench
 module "vertex_ai" {
   source     = "./vertex_ai"
   project_id = module.apis.project_id
+  depends_on = [module.apis]
 }
 
 #BigQuery
 module "big_query" {
   source     = "./big_query"
   project_id = module.apis.project_id
+  depends_on = [module.apis]
 }
 

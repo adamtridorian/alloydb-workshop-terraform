@@ -6,5 +6,4 @@ variable "project_id" {
 variable "services_list" {
   type          = set(string)
   description   = "List of API endpoint to be activated"
-  default       = [ "compute.googleapis.com", "dns.googleapis.com" ]
 }

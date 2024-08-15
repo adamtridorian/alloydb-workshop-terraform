@@ -1,4 +1,4 @@
-resource "google_project_service" "service" {
+resource "google_project_service" "project_services" {
     for_each = var.services_list
 
     project = var.project_id
@@ -8,6 +8,6 @@ resource "google_project_service" "service" {
         create = "30m"
         update = "40m"
     }
-
-    disable_dependent_services = true
+    
+    disable_on_destroy = false
 }

@@ -1,7 +1,9 @@
+#EDIT ONLY THIS
+
 variable "project_id" {
   description = "Change the default value to your project ID before running"
   type        = string
-  default     = "adam-sandbox-425004"
+  default     = "titan-sandbox"
 }
 
 variable "editor_emails" {
