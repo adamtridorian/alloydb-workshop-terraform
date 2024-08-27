@@ -12,3 +12,26 @@ resource "google_project_iam_binding" "project" {
 
   members = each.value.member
 }
+
+data "google_bigquery_default_service_account" "bq_sa" {
+}
+
+data "google_project" "current" {
+  project_id = var.project_id
+}
+
+output "project_number" {
+  value = data.google_project.current.number
+}
+
+resource "google_project_iam_member" "bigquery_aiplatform_user" {
+  project = var.project_id
+  role    = "roles/aiplatform.user"
+  member  = "serviceAccount:${data.google_bigquery_default_service_account.bq_sa.email}"
+}
+
+resource "google_project_iam_member" "alloydb_aiplatform_user" {
+  project = var.project_id
+  role    = "roles/aiplatform.user"
+  member  = "serviceAccount:service-${data.google_project.current.number}@gcp-sa-alloydb.iam.gserviceaccount.com"
+}

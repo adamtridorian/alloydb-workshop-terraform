@@ -9,11 +9,15 @@ variable "project_id" {
 variable "editor_emails" {
   description = "Emails of editor users"
   type        = list(string)
-  default     = []
+  default     = ["user:adamboonchaya@gmail.com"]
 }
 
 variable "viewer_emails" {
   description = "Emails of viewer users"
   type        = list(string)
-  default     = []
+  default     = ["user:adamboonchaya@gmail.com"]
+}
+
+locals {
+  unique_emails = toset(concat(var.editor_emails, var.viewer_emails))
 }

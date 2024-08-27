@@ -46,6 +46,22 @@ module "user_iam" {
     {
       role   = "roles/editor"
       member = var.editor_emails
+    },
+    {
+      role   = "roles/aiplatform.user"
+      member = var.viewer_emails
+    },
+    {
+      role   = "roles/bigquery.connectionAdmin"
+      member = var.viewer_emails
+    },
+    {
+      role   = "roles/bigquery.dataEditor"
+      member = var.viewer_emails
+    },
+    {
+      role   = "roles/bigquery.user"
+      member = var.viewer_emails
     }
   ]
   depends_on = [module.apis]
@@ -65,6 +81,7 @@ module "vertex_ai" {
   project_id       = module.apis.project_id
   vpc_network_name = module.vpc.vpc_self_link
   depends_on       = [module.apis]
+  unique_emails    = local.unique_emails
 }
 
 #BigQuery
