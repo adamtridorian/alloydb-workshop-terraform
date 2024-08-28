@@ -30,6 +30,15 @@ resource "google_project_iam_member" "bigquery_aiplatform_user" {
   member  = "serviceAccount:${data.google_bigquery_default_service_account.bq_sa.email}"
 }
 
+data "google_compute_default_service_account" "default" {
+}
+
+resource "google_project_iam_member" "compute_service_account_iam_admin" {
+  project = var.project_id
+  role    = "roles/resourcemanager.projectIamAdmin"
+  member  = "serviceAccount:${data.google_compute_default_service_account.default.email}"
+}
+
 resource "google_project_iam_member" "alloydb_aiplatform_user" {
   project = var.project_id
   role    = "roles/aiplatform.user"

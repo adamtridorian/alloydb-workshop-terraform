@@ -3,19 +3,19 @@
 variable "project_id" {
   description = "Change the default value to your project ID before running"
   type        = string
-  default     = "adam-sandbox-425004"
+  default     = "<PROJECT_ID>"
 }
 
 variable "editor_emails" {
   description = "Emails of editor users"
   type        = list(string)
-  default     = ["user:adamboonchaya@gmail.com"]
+  default     = ["user:<EDITOR_EMAILS>"]
 }
 
 variable "viewer_emails" {
-  description = "Emails of viewer users"
+  description = "Emails of Vertex AI Workbench users"
   type        = list(string)
-  default     = ["user:adamboonchaya@gmail.com"]
+  default     = ["user:<WORKBENCH_USER_EMAILS>"]
 }
 
 locals {
