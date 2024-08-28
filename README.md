@@ -5,7 +5,9 @@ To check your current Python version, run python3 -V or python -V. Supported ver
 https://cloud.google.com/sdk/docs/install#mac
 
 3. Config gcloud CLI
-gcloud auth login
+gcloud auth login 
+or 
+gcloud auth application-default login
 gcloud config set project <PROJECT_ID>
 gcloud init
 
@@ -17,3 +19,4 @@ terraform init
 
 6. Run terraform with 
 terraform apply
+
