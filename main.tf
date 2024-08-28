@@ -11,13 +11,6 @@ provider "google" {
   project = var.project_id
 }
 
-#VPC
-module "vpc" {
-  source       = "./vpc"
-  project_id   = var.project_id
-  network_name = "data-lab-vpc"
-}
-
 #API Services
 module "apis" {
   source     = "./apis"
@@ -31,7 +24,14 @@ module "apis" {
     "notebooks.googleapis.com",
     "bigquery.googleapis.com",
   ]
-  depends_on = [module.vpc]
+}
+
+#VPC
+module "vpc" {
+  source       = "./vpc"
+  project_id   = var.project_id
+  network_name = "data-lab-vpc"
+  depends_on   = [module.apis]
 }
 
 #User IAM
